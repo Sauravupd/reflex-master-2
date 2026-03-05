@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Game Colors -->
+    <color name="bg_dark">#FF0D0D2B</color>
+    <color name="bg_gradient_end">#FF1A1A4E</color>
+    <color name="bubble_red">#FFFF4757</color>
+    <color name="bubble_orange">#FFFF6B35</color>
+    <color name="bubble_yellow">#FFFFD93D</color>
+    <color name="bubble_green">#FF2ED573</color>
+    <color name="bubble_blue">#FF1E90FF</color>
+    <color name="bubble_purple">#FFA55EEA</color>
+    <color name="bubble_pink">#FFFF6B81</color>
+    <color name="bubble_cyan">#FF18DCFF</color>
+    <color name="life_bubble">#FF00FF88</color>
+    <color name="hud_text">#FFFFFFFF</color>
+    <color name="score_gold">#FFFFD700</color>
+    <color name="heart_red">#FFFF4757</color>
+    <color name="button_start">#FF6C5CE7</color>
+    <color name="button_start_pressed">#FF5A4BD1</color>
+</resources>

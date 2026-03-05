@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Bubble circle -->
+    <path
+        android:fillColor="#FF6B81"
+        android:pathData="M54,54m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0"/>
+    <!-- Highlight -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M44,38a12,10 0,0 1,8 -8a18,18 0,0 0,-14 14z"/>
+    <!-- Small bubble -->
+    <path
+        android:fillColor="#18DCFF"
+        android:pathData="M72,32m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0"/>
+    <!-- Tiny bubble -->
+    <path
+        android:fillColor="#FFD93D"
+        android:pathData="M36,72m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0"/>
+</vector>
