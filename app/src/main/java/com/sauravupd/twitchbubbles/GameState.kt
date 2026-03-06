@@ -1,4 +1,4 @@
-package com.bubblepop.game
+package com.sauravupd.twitchbubbles
 
 data class GameState(
     var score: Int = 0,

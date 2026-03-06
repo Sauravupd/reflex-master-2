@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.bubblepop.game"
+    namespace = "com.sauravupd.twitchbubbles"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.bubblepop.game"
+        applicationId = "com.sauravupd.twitchbubbles"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

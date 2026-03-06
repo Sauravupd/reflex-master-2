@@ -1,4 +1,4 @@
-package com.bubblepop.game
+package com.sauravupd.twitchbubbles
 
 data class Particle(
     var x: Float,

@@ -1,4 +1,4 @@
-package com.bubblepop.game
+package com.sauravupd.twitchbubbles
 
 import android.graphics.*
 
