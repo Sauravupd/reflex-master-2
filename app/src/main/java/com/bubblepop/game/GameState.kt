@@ -6,34 +6,41 @@ data class GameState(
     var maxLives: Int = 5,
     var level: Int = 1,
     var popsThisLevel: Int = 0,
-    var popsPerLevel: Int = 10,
+    var popsPerLevel: Int = 12,
     var bestScore: Int = 0,
     var isGameOver: Boolean = false,
     var isStartScreen: Boolean = true,
     var comboCount: Int = 0,
     var comboTimer: Float = 0f,
-    var comboTimeWindow: Float = 1.5f,
-    var screenShakeAmount: Float = 0f
+    var comboTimeWindow: Float = 2.0f,
+    var screenShakeAmount: Float = 0f,
+    var totalPops: Int = 0,
+    var totalMissed: Int = 0,
+    var maxCombo: Int = 0
 ) {
-    // Difficulty parameters derived from level
-    val maxBubbles: Int get() = (level).coerceAtMost(5)
+    // Start with 2 bubbles, ramp up to 8
+    val maxBubbles: Int get() = (2 + (level - 1)).coerceAtMost(8)
 
-    val shrinkRate: Float get() = 30f + (level - 1) * 8f
+    // Easier start: slower shrink at level 1, ramps harder
+    val shrinkRate: Float get() = 35f + (level - 1) * 8f
 
-    val spawnInterval: Float get() = (2.0f - (level - 1) * 0.15f).coerceAtLeast(0.6f)
+    // Spawn interval: gentler start, still gets intense
+    val spawnInterval: Float get() = (1.2f - (level - 1) * 0.08f).coerceAtLeast(0.35f)
 
     val lifeBubbleChance: Float
         get() = when {
-            level <= 1 -> 0f
-            level <= 3 -> 0.10f
-            level <= 5 -> 0.12f
-            else -> 0.15f
+            level <= 1 -> 0.05f    // small chance even at level 1 for early reward
+            level <= 3 -> 0.12f
+            level <= 5 -> 0.14f
+            else -> 0.16f
         }
 
-    val bubbleMaxRadius: Float get() = (90f - (level - 1) * 5f).coerceAtLeast(50f)
+    // BIG bubbles at start, shrink with level
+    val bubbleMaxRadius: Float get() = (95f - (level - 1) * 5f).coerceAtLeast(50f)
 
     fun onPop() {
         popsThisLevel++
+        totalPops++
         if (popsThisLevel >= popsPerLevel) {
             level++
             popsThisLevel = 0
@@ -42,6 +49,7 @@ data class GameState(
 
     fun loseLife() {
         lives--
+        totalMissed++
         if (lives <= 0) {
             lives = 0
             isGameOver = true
@@ -59,6 +67,9 @@ data class GameState(
         lives = 3
         level = 1
         popsThisLevel = 0
+        totalPops = 0
+        totalMissed = 0
+        maxCombo = 0
         isGameOver = false
         isStartScreen = false
         comboCount = 0
@@ -78,6 +89,9 @@ data class GameState(
     fun addCombo() {
         comboCount++
         comboTimer = comboTimeWindow
+        if (comboCount > maxCombo) {
+            maxCombo = comboCount
+        }
     }
 
     fun getScoreMultiplier(): Int {

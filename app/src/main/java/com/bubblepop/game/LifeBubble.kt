@@ -15,35 +15,16 @@ class LifeBubble(
         color = Color.WHITE
         style = Paint.Style.FILL
     }
-    private val glowRingPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        strokeWidth = 3f
-    }
 
     override fun update(dt: Float) {
         super.update(dt)
-        pulsePhase += dt * 6f  // pulsing speed
+        pulsePhase += dt * 6f
     }
 
     override fun draw(canvas: Canvas) {
         if (!isAlive) return
 
-        // Pulsing glow ring
-        val pulseScale = 1f + 0.15f * kotlin.math.sin(pulsePhase)
-        val glowRadius = radius * 1.3f * pulseScale
-        glowRingPaint.shader = RadialGradient(
-            x, y, glowRadius,
-            intArrayOf(
-                Color.argb(80, 0, 255, 136),
-                Color.argb(30, 0, 255, 136),
-                Color.TRANSPARENT
-            ),
-            floatArrayOf(0.6f, 0.8f, 1f),
-            Shader.TileMode.CLAMP
-        )
-        canvas.drawCircle(x, y, glowRadius, glowRingPaint)
-
-        // Draw base bubble
+        // Draw base bubble (includes the shrinking ring from parent)
         super.draw(canvas)
 
         // Draw heart icon in center
@@ -54,7 +35,6 @@ class LifeBubble(
         val path = Path()
         val s = size
 
-        // Heart shape using cubic bezier curves
         path.moveTo(cx, cy + s * 0.3f)
         path.cubicTo(cx - s * 1.2f, cy - s * 0.5f, cx - s * 0.5f, cy - s * 1.2f, cx, cy - s * 0.4f)
         path.cubicTo(cx + s * 0.5f, cy - s * 1.2f, cx + s * 1.2f, cy - s * 0.5f, cx, cy + s * 0.3f)

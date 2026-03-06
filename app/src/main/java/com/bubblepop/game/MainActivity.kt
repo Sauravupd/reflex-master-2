@@ -28,6 +28,16 @@ class MainActivity : AppCompatActivity() {
         rootLayout.addView(gameView)
     }
 
+    override fun onPause() {
+        super.onPause()
+        gameView.onPauseGame()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        gameView.onResumeGame()
+    }
+
     private fun hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.let {
