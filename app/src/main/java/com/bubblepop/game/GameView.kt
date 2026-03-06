@@ -771,7 +771,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
     }
 
     private fun drawHUD(canvas: Canvas) {
-        // Reduced padding to keep HUD out of the play area while avoiding most notches
+        // Safe padding for HUD
         val topPadding = 80f
         val sidePadding = 100f
 
@@ -784,17 +784,18 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         criticalLabelPaint.textAlign = Paint.Align.LEFT
         canvas.drawText("SCORE", sidePadding, topPadding, criticalLabelPaint)
 
-        // "CRITICAL MISSES" - Top Right (To the left of sound icon)
+        // "CRITICAL MISSES" - Top Right (Moved further left to avoid sound icon)
         criticalLabelPaint.textAlign = Paint.Align.RIGHT
         val speakerX = screenW - sidePadding
         val speakerY = topPadding + 15f
         
-        canvas.drawText("CRITICAL MISSES", speakerX - 160f, topPadding, criticalLabelPaint)
+        // Label position: far enough left to clear the dots and speaker
+        canvas.drawText("CRITICAL MISSES", speakerX - 260f, topPadding, criticalLabelPaint)
         
-        // Life indicators (dots) - Aligned with label
+        // Life indicators (dots) - Positioned safely between label and speaker
         val dotRadius = 8f
-        val dotGap = 30f
-        val dotsBaseX = speakerX - 120f // Positioned to left of speaker
+        val dotGap = 35f
+        val dotsBaseX = speakerX - 230f // Start dots far enough left
         for (i in 0 until state.maxLives) {
             val cx = dotsBaseX + (i * dotGap)
             val cy = topPadding - 10f
