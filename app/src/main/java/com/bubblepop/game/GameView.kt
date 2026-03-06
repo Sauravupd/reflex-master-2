@@ -771,9 +771,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
     }
 
     private fun drawHUD(canvas: Canvas) {
-        // Very generous padding for notches and rounded corners
-        val topPadding = 140f
-        val sidePadding = 120f
+        // Reduced padding to keep HUD out of the play area while avoiding most notches
+        val topPadding = 80f
+        val sidePadding = 100f
 
         // Score: Digital style (0000000) - Top Left
         val formattedScore = String.format("%07d", displayedScore.toInt())
@@ -784,17 +784,20 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         criticalLabelPaint.textAlign = Paint.Align.LEFT
         canvas.drawText("SCORE", sidePadding, topPadding, criticalLabelPaint)
 
-        // "CRITICAL MISSES" - Top Right (Moved further left)
+        // "CRITICAL MISSES" - Top Right (To the left of sound icon)
         criticalLabelPaint.textAlign = Paint.Align.RIGHT
-        canvas.drawText("CRITICAL MISSES", screenW - sidePadding - 180f, topPadding, criticalLabelPaint)
+        val speakerX = screenW - sidePadding
+        val speakerY = topPadding + 15f
         
-        // Life indicators (dots) - NOW BELOW label to prevent horizontal overlap
+        canvas.drawText("CRITICAL MISSES", speakerX - 160f, topPadding, criticalLabelPaint)
+        
+        // Life indicators (dots) - Aligned with label
         val dotRadius = 8f
-        val dotGap = 35f
-        val dotsStartY = topPadding + 35f
+        val dotGap = 30f
+        val dotsBaseX = speakerX - 120f // Positioned to left of speaker
         for (i in 0 until state.maxLives) {
-            val cx = screenW - sidePadding - 280f + (i * dotGap)
-            val cy = dotsStartY
+            val cx = dotsBaseX + (i * dotGap)
+            val cy = topPadding - 10f
             val dotPaint = if (i < state.lives) {
                 Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#FF4757") }
             } else {
@@ -803,8 +806,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
             canvas.drawCircle(cx, cy, dotRadius, dotPaint)
         }
 
-        // Speaker Icon - Top Right (Moved in and down)
-        drawSpeakerIcon(canvas, screenW - sidePadding, topPadding - 10f)
+        // Speaker Icon - Top Right
+        drawSpeakerIcon(canvas, speakerX, speakerY)
 
         // Combo indicator
         if (state.comboCount >= 2) {
