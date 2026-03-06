@@ -886,11 +886,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         val centerX = screenW / 2f
         val centerY = screenH / 2f
 
-        // TITLE: "TWITCH" (Gradient + Glow) - CENTER
-        mainTitlePaint.shader = LinearGradient(0f, centerY - 150f, 0f, centerY - 50f,
+        // TITLE: "TWITCH" (Gradient + Glow) - TOP
+        val titleY = 150f
+        mainTitlePaint.shader = LinearGradient(0f, titleY - 100f, 0f, titleY,
             Color.parseColor("#74B9FF"), Color.parseColor("#A55EEA"), Shader.TileMode.CLAMP)
         mainTitlePaint.setShadowLayer(40f, 0f, 0f, Color.argb(120, 108, 92, 231))
-        canvas.drawText("TWITCH", centerX, centerY - 50f, mainTitlePaint)
+        canvas.drawText("TWITCH", centerX, titleY, mainTitlePaint)
         mainTitlePaint.shader = null
         mainTitlePaint.setShadowLayer(0f, 0f, 0f, 0)
 
@@ -898,29 +899,18 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         subtitlePaint.textSize = 24f
         subtitlePaint.color = Color.parseColor("#747D8C")
         subtitlePaint.letterSpacing = 0.4f
-        canvas.drawText("MASTER REFLEX EDITION", centerX, centerY, subtitlePaint)
+        canvas.drawText("MASTER REFLEX EDITION", centerX, titleY + 45f, subtitlePaint)
 
-        // BEST SCORE HIGHLIGHT BADGE
+        // BEST SCORE HIGHLIGHT (TOP - Below Title)
         if (state.bestScore > 0) {
-            val badgeW = 320f
-            val badgeH = 60f
-            val badgeRect = RectF(centerX - badgeW/2f, centerY + 20f, centerX + badgeW/2f, centerY + 20f + badgeH)
-            
-            // Glowing background for badge
-            val badgePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.argb(40, 255, 215, 0) // Subtle Gold Glow
-                style = Paint.Style.FILL
-            }
-            badgePaint.setShadowLayer(15f, 0f, 0f, Color.parseColor("#FFD700"))
-            canvas.drawRoundRect(badgeRect, badgeH/2f, badgeH/2f, badgePaint)
-            
             val badgeTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = Color.parseColor("#FFD700")
-                textSize = 28f
+                textSize = 32f
                 textAlign = Paint.Align.CENTER
                 typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                setShadowLayer(10f, 0f, 0f, Color.argb(100, 255, 215, 0))
             }
-            canvas.drawText("BEST SCORE: ${state.bestScore}", centerX, badgeRect.centerY() + 10f, badgeTextPaint)
+            canvas.drawText("BEST SCORE: ${state.bestScore}", centerX, titleY + 100f, badgeTextPaint)
         }
 
         // BUTTONS: CENTERED
@@ -982,9 +972,20 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         canvas.drawText("FAILED", centerX, 150f, mainTitlePaint)
         mainTitlePaint.shader = null
 
+        // TOP SCORE - NEXT TO FAILED TITLE
+        if (state.bestScore > 0) {
+            val topScorePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#FFD700")
+                textSize = 28f
+                textAlign = Paint.Align.CENTER
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            }
+            canvas.drawText("TOP SCORE: ${state.bestScore}", centerX, 200f, topScorePaint)
+        }
+
         // GRID LAYOUT FOR STATS (More spaced out)
         val startX = 100f
-        val startY = 240f
+        val startY = 260f
         val boxW = 300f
         val boxH = 145f
         val hGap = 45f
@@ -1005,16 +1006,14 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         drawStatBox("POPPED", "${state.totalPops}", startX + boxW + hGap, startY, Color.parseColor("#74B9FF"))
         drawStatBox("TOTAL MISSED", "${state.totalMissed}", startX, startY + boxH + vGap, Color.parseColor("#747D8C"))
         drawStatBox("COMBO", "${state.maxCombo}", startX + boxW + hGap, startY + boxH + vGap, Color.parseColor("#FFD700"))
-        
-        // 5th Stat Box: TOP SCORE (Centered below)
-        drawStatBox("TOP SCORE", "${state.bestScore}", startX + (boxW + hGap) / 2f, startY + (boxH + vGap) * 2f, Color.parseColor("#FFD700"))
 
         // BUTTONS below grid
         val btnW = 260f
         val btnH = 90f
+        val btnsY = startY + (boxH + vGap) * 2f + 20f
         
         // RETRY
-        replayButtonRect = RectF(startX, startY + (boxH + vGap) * 2f + 30f, startX + btnW, startY + (boxH + vGap) * 2f + btnH + 30f)
+        replayButtonRect = RectF(startX, btnsY, startX + btnW, btnsY + btnH)
         val retryPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE }
         canvas.drawRoundRect(replayButtonRect, btnH/2f, btnH/2f, retryPaint)
         buttonTextPaint.color = Color.BLACK
@@ -1022,14 +1021,14 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         canvas.drawText("RETRY", replayButtonRect.centerX(), replayButtonRect.centerY() + 10f, buttonTextPaint)
 
         // MENU
-        menuButtonRect = RectF(startX + btnW + hGap, startY + (boxH + vGap) * 2f + 30f, startX + btnW * 2f + hGap, startY + (boxH + vGap) * 2f + btnH + 30f)
+        menuButtonRect = RectF(startX + btnW + hGap, btnsY, startX + btnW * 2f + hGap, btnsY + btnH)
         canvas.drawRoundRect(menuButtonRect, btnH/2f, btnH/2f, statsCardPaint)
         buttonTextPaint.color = Color.WHITE
         canvas.drawText("MENU", menuButtonRect.centerX(), menuButtonRect.centerY() + 10f, buttonTextPaint)
 
         // PERFORMANCE REPORT BOX (Right Side - Expanded to fill)
         val reportLeft = startX + (boxW + hGap) * 2f + 40f
-        val reportRect = RectF(reportLeft, startY, screenW - 80f, startY + (boxH + vGap) * 2f + btnH + 30f)
+        val reportRect = RectF(reportLeft, startY, screenW - 80f, btnsY + btnH)
         val reportPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(25, 116, 185, 255); style = Paint.Style.FILL }
         canvas.drawRoundRect(reportRect, 30f, 30f, reportPaint)
         
