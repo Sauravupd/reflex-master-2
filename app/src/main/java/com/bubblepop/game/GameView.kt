@@ -900,6 +900,29 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         subtitlePaint.letterSpacing = 0.4f
         canvas.drawText("MASTER REFLEX EDITION", centerX, centerY, subtitlePaint)
 
+        // BEST SCORE HIGHLIGHT BADGE
+        if (state.bestScore > 0) {
+            val badgeW = 320f
+            val badgeH = 60f
+            val badgeRect = RectF(centerX - badgeW/2f, centerY + 20f, centerX + badgeW/2f, centerY + 20f + badgeH)
+            
+            // Glowing background for badge
+            val badgePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.argb(40, 255, 215, 0) // Subtle Gold Glow
+                style = Paint.Style.FILL
+            }
+            badgePaint.setShadowLayer(15f, 0f, 0f, Color.parseColor("#FFD700"))
+            canvas.drawRoundRect(badgeRect, badgeH/2f, badgeH/2f, badgePaint)
+            
+            val badgeTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#FFD700")
+                textSize = 28f
+                textAlign = Paint.Align.CENTER
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            }
+            canvas.drawText("BEST SCORE: ${state.bestScore}", centerX, badgeRect.centerY() + 10f, badgeTextPaint)
+        }
+
         // BUTTONS: CENTERED
         val btnW = 450f
         val btnH = 90f
@@ -932,13 +955,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         
         buttonTextPaint.color = Color.WHITE
         canvas.drawText("SETTINGS", settingsButtonRect.centerX(), settingsButtonRect.centerY() + 10f, buttonTextPaint)
-
-        // Best score discreetly at bottom
-        if (state.bestScore > 0) {
-            subtitlePaint.textSize = 22f
-            subtitlePaint.color = Color.argb(100, 255, 255, 255)
-            canvas.drawText("TOP SCORE: ${state.bestScore}", centerX, screenH - 40f, subtitlePaint)
-        }
 
         // Speaker Icon - Top Right (Safely away from corner)
         drawSpeakerIcon(canvas, screenW - 120f, 120f)
@@ -989,6 +1005,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback 
         drawStatBox("POPPED", "${state.totalPops}", startX + boxW + hGap, startY, Color.parseColor("#74B9FF"))
         drawStatBox("TOTAL MISSED", "${state.totalMissed}", startX, startY + boxH + vGap, Color.parseColor("#747D8C"))
         drawStatBox("COMBO", "${state.maxCombo}", startX + boxW + hGap, startY + boxH + vGap, Color.parseColor("#FFD700"))
+        
+        // 5th Stat Box: TOP SCORE (Centered below)
+        drawStatBox("TOP SCORE", "${state.bestScore}", startX + (boxW + hGap) / 2f, startY + (boxH + vGap) * 2f, Color.parseColor("#FFD700"))
 
         // BUTTONS below grid
         val btnW = 260f
